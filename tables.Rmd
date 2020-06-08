@@ -1,0 +1,58 @@
+```{r}
+library(data.table)
+DF=data.frame(x=rnorm(9),y=rep(c("a","b","c"),each=3),z=rnorm(9))
+head(DF)
+```
+```{r}
+tables()
+```
+```{r}
+DT=data.table(x=rnorm(9),y=rep(c("a","b","c"),each=3),z=rnorm(9))
+head(DT,3)
+```
+```{r}
+tables()
+```
+```{r}
+DT[2,]
+```
+#data by column values:
+```{r}
+DT[DT$y=="a"]
+```
+#you can pass functions also
+```{r}
+DT[,list(mean(x),sum(z))]
+```
+#get table of y-values
+```{r}
+DT[,table(y)]
+```
+#add new column
+```{r}
+DT[,w:=z^2]
+head(DT,3)
+```
+#if you create copy,change in original will affect in copied table also.
+#special var .N it is integer contains one number
+```{r}
+set.seed(123);
+DT<-data.table(x=sample(letters[1:3],1000,TRUE))
+DT
+```
+# .N counts by variable for each distinct variable and displays count in new column
+```{r}
+DT[,.N,by=x]
+#i am comment
+```
+# fast reading: comparision between 'fread' and 'read.table' command 
+```{r}
+big_df_file<-data.frame(x=rnorm(1E6),y=rnorm(1E6))
+file<-tempfile()
+write.table(big_df_file,file=file,row.names = FALSE,col.names = TRUE,sep = "\t",quote=FALSE)
+system.time(fread(file))
+```
+```{r}
+system.time(read.table(file,header = TRUE,sep = "\t"))
+
+```
